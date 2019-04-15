@@ -19,7 +19,7 @@ http://localhost:4000/school/students
 
 ... will get all items in the students collection
 
-POST {"name": "John Smith"}
+POST {"name": "John Smith"} ->
 http://localhost:4000/school/students/find
 
 ... will find students named John Smith
