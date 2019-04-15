@@ -1,0 +1,19 @@
+version: "2"
+services:
+  app:
+    container_name: app
+    restart: always
+    build: .
+    volumes:
+      - .:/app
+    command: npm run dev
+    working_dir: /app
+    ports:
+      - "4000:4000"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    ports:
+      - "27017:27017"
