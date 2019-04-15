@@ -3,7 +3,7 @@ services:
   app:
     container_name: app
     restart: always
-    build: .
+    image: node
     volumes:
       - .:/app
     command: npm run dev

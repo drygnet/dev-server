@@ -4,6 +4,7 @@ for frontend developers
 
 Just fire up the server and database with:
 ```
+$ npm install
 $ docker-compose up
 ```
 
