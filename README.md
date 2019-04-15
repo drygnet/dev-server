@@ -1,6 +1,6 @@
 # dev server
 for frontend developers
-
+> it's like firebase for docker :-)
 
 Just fire up the server and database with:
 ```
