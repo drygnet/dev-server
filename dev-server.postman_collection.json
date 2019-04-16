@@ -1,0 +1,197 @@
+{
+	"info": {
+		"_postman_id": "939191c6-254b-43ef-a38f-b8b8fc0f2381",
+		"name": "dev-server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add student",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"John Smith\"}"
+				},
+				"url": {
+					"raw": "localhost:4000/school/students",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"school",
+						"students"
+					]
+				},
+				"description": "Adds one item with just the name"
+			},
+			"response": []
+		},
+		{
+			"name": "Students",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:4000/school/students",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"school",
+						"students"
+					]
+				},
+				"description": "Gets all students in collection"
+			},
+			"response": []
+		},
+		{
+			"name": "Find students",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\": \"John Smith\"}"
+				},
+				"url": {
+					"raw": "localhost:4000/school/students/find",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"school",
+						"students",
+						"find"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add schema",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"$jsonSchema\": {\n        \"bsonType\": \"object\",\n        \"required\": [\n            \"name\",\n            \"address.city\",\n            \"address.street\"\n        ],\n        \"properties\": {\n            \"name\": {\n                \"bsonType\": \"string\",\n                \"description\": \"must be a string and is required\"\n            },\n            \"gender\": {\n                \"bsonType\": \"string\",\n                \"description\": \"must be a string and is not required\"\n            },\n\n            \"address.city\": {\n                \"bsonType\": \"string\",\n                \"description\": \"must be a string and is required\"\n            },\n            \"address.street\": {\n                \"bsonType\": \"string\",\n                \"description\": \"must be a string and is required for sure\"\n            }\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "localhost:4000/school/students/schema",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"school",
+						"students",
+						"schema"
+					]
+				},
+				"description": "adds a schema to the students collection (in the school db)"
+			},
+			"response": []
+		},
+		{
+			"name": "Read schema",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:4000/school/students/schema",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"school",
+						"students",
+						"schema"
+					]
+				},
+				"description": "gets the schema"
+			},
+			"response": []
+		},
+		{
+			"name": "Add student with schema",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"name\": \"John Smith\",\n\t\"address\": {\n\t\t\"city\": \"Visby\",\n\t\t\"street\": \"Arlington rd\"\n\t}\n}\n"
+				},
+				"url": {
+					"raw": "localhost:4000/school/students",
+					"host": [
+						"localhost"
+					],
+					"port": "4000",
+					"path": [
+						"school",
+						"students"
+					]
+				},
+				"description": "Minimum object to save when schema is active"
+			},
+			"response": []
+		}
+	]
+}
