@@ -2,7 +2,6 @@ version: "2"
 services:
   app:
     container_name: app
-    restart: always
     image: node
     volumes:
       - .:/app
@@ -15,5 +14,7 @@ services:
   mongo:
     container_name: mongo
     image: mongo
+    volumes:
+      - ./mongo:/data/db/
     ports:
       - "27017:27017"
