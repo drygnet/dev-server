@@ -3,14 +3,15 @@ const app = express();
 const mongodb = require('mongodb');
 const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
+const Ajv = require('ajv')
 
 const config = require('./db');
 const PORT = 4000;
 const client = mongodb.MongoClient;
 
 
-client.connect(config.DB, function(err, client) {
-    if(err) {
+client.connect(config.DB, function (err, client) {
+    if (err) {
         console.log('database is not connected')
     }
     else {
@@ -19,63 +20,78 @@ client.connect(config.DB, function(err, client) {
     }
 });
 
-app.get('/', function(req, res) {
-    res.json({"hello": "world"});
+app.get('/', function (req, res) {
+    res.json({ "hello": "world" });
 });
 
-app.get('/:db/:collection', function(req, res) {
+app.get('/:db/:collection', function (req, res) {
     var db = dbclient.db(req.params.db);
-    db.collection(req.params.collection, function(err, collection) {
-        collection.find().toArray(function(err, items) {
+    db.collection(req.params.collection, function (err, collection) {
+        collection.find().toArray(function (err, items) {
             res.send(items);
         });
     });
 });
 
-app.get('/:db/:collection/schema', function(req, res) {
-    var db = dbclient.db(req.params.db);
-    db.listCollections({name: req.params.collection})
-    .next(function(err, collinfo) {
-        if (collinfo) {
-            res.send(collinfo)
-        }
-    });
+app.get('/:db/:collection/schema', async function (req, res) {
+    var schema = await getShema(req.params.db, req.params.collection)
+    console.log(schema)
+    res.send(schema)
+
 });
 
-app.post('/:db/:collection/schema', jsonParser, function(req, res) {
+app.post('/:db/:collection/schema', jsonParser, function (req, res) {
     var db = dbclient.db(req.params.db);
     db.command({
         "collMod": req.params.collection,
         "validator": req.body,
         "validationLevel": "strict"
-      },function(err, info){
-          res.send(info)
-      });
+    }, function (err, info) {
+        res.send(info)
+    });
 })
 
-app.post('/:db/:collection/find', jsonParser, function(req, res) {
+app.post('/:db/:collection/find', jsonParser, function (req, res) {
     var db = dbclient.db(req.params.db);
-    db.collection(req.params.collection, function(err, collection) {
-        collection.find(req.body).toArray(function(err, items) {
+    db.collection(req.params.collection, function (err, collection) {
+        collection.find(req.body).toArray(function (err, items) {
             res.send(items);
         });
     });
 });
 
-app.post('/:db/:collection', jsonParser, function(req, res){
+app.post('/:db/:collection', jsonParser, function (req, res) {
     var db = dbclient.db(req.params.db);
     db.collection(req.params.collection, function (err, collection) {
-        collection.insertOne(req.body, function(err, dbresp){
-            if(err){
-                res.status(400)
-                res.send(err)
+        collection.insertOne(req.body, function (err, dbresp) {
+            if (err) {
+                validate(req, res, err)
             } else {
-            res.send(dbresp.ops[0])
+                res.send(dbresp.ops[0])
             }
         })
     });
 });
 
-app.listen(PORT, function(){
-    console.log('Your node js server is running on PORT:',PORT);
+async function validate(req, res, err) {
+    res.status(400);
+    var schema = await getShema(req.params.db, req.params.collection)
+    var data = req.body
+    var ajv = new Ajv();
+    var valid = ajv.validate(schema.$jsonSchema, data);
+    if (!valid) {
+        res.send({ error: err, validationError: ajv.errors })
+    } else {
+        res.send('Schema valid, error was', err)
+    }
+}
+
+async function getShema(dbname, collection) {
+    var db = dbclient.db(dbname);
+    collinfo = await db.listCollections({ name: collection }).next()
+    return collinfo.options.validator;
+}
+
+app.listen(PORT, function () {
+    console.log('Your node js server is running on PORT:', PORT);
 });
