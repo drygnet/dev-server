@@ -20,7 +20,7 @@ client.connect(config.DB, function (err, client) {
     }
 });
 
-app.get('/', function (req, res) {
+app.get('/apa', function (req, res) {
     res.json({ "hello": "world" });
 });
 
@@ -33,23 +33,6 @@ app.get('/:db/:collection', function (req, res) {
     });
 });
 
-app.get('/:db/:collection/schema', async function (req, res) {
-    var schema = await getShema(req.params.db, req.params.collection)
-    console.log(schema)
-    res.send(schema)
-
-});
-
-app.post('/:db/:collection/schema', jsonParser, function (req, res) {
-    var db = dbclient.db(req.params.db);
-    db.command({
-        "collMod": req.params.collection,
-        "validator": req.body,
-        "validationLevel": "strict"
-    }, function (err, info) {
-        res.send(info)
-    });
-})
 
 app.post('/:db/:collection/find', jsonParser, function (req, res) {
     var db = dbclient.db(req.params.db);
@@ -73,8 +56,25 @@ app.post('/:db/:collection', jsonParser, function (req, res) {
     });
 });
 
+app.get('/:db/:collection/schema', async function (req, res) {
+    var schema = await getShema(req.params.db, req.params.collection)
+    console.log(schema)
+    res.send(schema)
+
+});
+
+app.post('/:db/:collection/schema', jsonParser, function (req, res) {
+    var db = dbclient.db(req.params.db);
+    db.command({
+        "collMod": req.params.collection,
+        "validator": req.body,
+        "validationLevel": "strict"
+    }, function (err, info) {
+        res.send(info)
+    });
+})
+
 async function validate(req, res, err) {
-    res.status(400);
     var schema = await getShema(req.params.db, req.params.collection)
     var data = req.body
     var ajv = new Ajv();
@@ -82,7 +82,7 @@ async function validate(req, res, err) {
     if (!valid) {
         res.send({ error: err, validationError: ajv.errors })
     } else {
-        res.send('Schema valid, error was', err)
+        res.send({error: err})
     }
 }
 
