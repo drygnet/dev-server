@@ -15,7 +15,7 @@
     "ajv": "^6.10.2",
     "body-parser": "^1.18.3",
     "eslint": "^6.7.2",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "mongodb": "^3.2.3"
   },
   "devDependencies": {
